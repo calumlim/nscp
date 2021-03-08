@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Navy Seals Copy Pasta Typing Test
+{% endblock title %}
+
+{% block content %}
+  <div class="container row h-100 mx-auto">
+    <div class="card col-12 my-auto mx-auto">
+        <div class="card-body">
+            <h1 class="mb-2 py-2">Navy Seals Copy Pasta Typing Test</h1>
+            <span class="border px-4 py-1"><span id="id_speed">0.0000</span> NVCP/minute</span>
+
+            <ul id="id_paragraph_list" class="list-inline mt-5">
+
+            </ul>
+
+            <div class="row px-2 mb-2 mt-2">
+                <div class="col-9">
+                    <input type="text" class="w-100 h-100" id="id_input">
+                </div>
+                <div class="col-1 border align-items-center d-flex justify-content-center">
+                    <p class="mb-0 text-muted" id="id_timer">1:00</p>
+                </div>
+                <div class="col-2">
+                    <button id="id_restart" class="w-100 btn btn-primary">Restart</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block page_js %}
+<script>
+    $(document).ready(function () {
+        var restart = $('#id_restart');
+        var input = $('#id_input');
+        var timer = $('#id_timer');
+        var interval = null;
+        var speed = $('#id_speed');
+        paragraph_list = $('#id_paragraph_list');
+
+        paragraph = "{{ paragraph }}".split(' ');
+        n = paragraph.length;
+
+        function populate_list() {
+            for (var i=0; i < n; i++) {
+                paragraph_list.append('<li class="list-inline-item rounded px-2 py-1 m-0">'+ paragraph[i] +'</li>');
+            }
+        }
+
+        function unpopulate_list() {
+            children = paragraph_list.children();
+            for (var i=0; i < n; i++) {
+                $(children[i]).remove();
+            }
+        }
+
+        function reset_test() {
+            paragraph_list_children = paragraph_list.children();
+            current_ind = 0;
+            current_word = paragraph[current_ind];
+            current_word_elem = $(paragraph_list_children[current_ind]);
+            current_word_elem.removeClass('bg-danger bg-success bg-transparent text-white text-success text-danger');
+            current_word_elem.addClass('bg-secondary text-white');
+            correct_words = 0;
+            window.clearInterval(interval);
+            timer.html("1:00");
+            time_left = 60;
+            test_started = false;
+            speed.html("0.0000");
+            input.prop("disabled", false);
+        }
+
+        function start_test() {
+            test_started = true;
+            interval = setInterval(function() {
+                time_left--;
+                if (time_left > 0) {
+                    if (time_left < 10) {
+                        timer.html("0:0"+ time_left.toString());
+                    } else {
+                        timer.html("0:"+ time_left.toString());
+                    }
+                } else {
+                    timer.html("Completed");
+                    input.prop("disabled", true);
+                }
+            }, 1000)
+        }
+
+        function set_speed() {
+            current_speed = (correct_words/n).toFixed(4);
+            speed.html(current_speed);
+        }
+
+        populate_list();
+
+        var paragraph_list_children = paragraph_list.children();
+
+        var current_ind = 0;
+        var current_word = paragraph[current_ind];
+        var current_word_elem = $(paragraph_list_children[current_ind]);
+        current_word_elem.addClass('bg-secondary text-white');
+
+        var test_started = false;
+        var time_left = 60;
+
+        // Statistics
+        var correct_words = 0;
+
+        input.on('input', function() {
+            if (!test_started) {
+                start_test();
+            }
+
+            word = input.val();
+            
+            if (word.length > current_word.length) {
+                current_word_elem.removeClass('bg-secondary');
+                current_word_elem.addClass('bg-danger');
+            } else {
+                current_word_elem.removeClass('bg-danger');
+                current_word_elem.addClass('bg-secondary');
+            }
+
+            if (word.slice(word.length - 1) == " ") {
+                word = word.slice(0, word.length - 1);
+                if (word == current_word) {
+                    console.log("correct word");
+                    correct_words++;
+                    current_word_elem.removeClass('bg-secondary text-white');
+                    current_word_elem.addClass('bg-transparent text-success');
+                } else {
+                    console.log("false");
+                    current_word_elem.removeClass('bg-secondary bg-danger bg-success text-white');
+                    current_word_elem.addClass('text-danger');
+                }
+
+                current_ind++;
+                current_word = paragraph[current_ind];
+
+                current_word_elem = $(paragraph_list_children[current_ind]);
+                current_word_elem.addClass('bg-secondary text-white');
+
+                set_speed();
+
+                input.val("");
+            }
+            
+        })
+
+        restart.on('click', function() {
+            unpopulate_list();
+            populate_list();
+            reset_test();
+
+            input.val("");
+        })
+    })
+</script> 
+{% endblock page_js %}
