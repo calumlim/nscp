@@ -58,6 +58,7 @@ Navy Seals Copy Pasta Typing Test
                     <button id="id_restart" class="w-100 btn btn-primary">Restart</button>
                 </div>
             </div>
+            <p class="small mb-0 text-muted mt-2 px-2">made by <a href="https://lumster.tech" class="text-muted">lumster.tech</a></p>
 
         </div>
     </div>
@@ -74,6 +75,10 @@ Navy Seals Copy Pasta Typing Test
         var speed = $('#id_speed');
         var wpm = $('#id_wpm');
         var total_correct_chars = 0;
+        const WPM_CONSTANT = 4.3;
+
+        input.focus();
+
         paragraph_list = $('#id_paragraph_list');
 
         paragraph = "{{ paragraph }}".split(' ');
@@ -130,7 +135,7 @@ Navy Seals Copy Pasta Typing Test
         function set_speed() {
             current_speed = (correct_words/n).toFixed(4);
             total_correct_chars = total_correct_chars + current_word.length;
-            current_wpm = ((total_correct_chars/4)).toFixed(0);
+            current_wpm = ((total_correct_chars/WPM_CONSTANT)).toFixed(0);
             speed.html(current_speed);
             wpm.html(current_wpm);
         }
