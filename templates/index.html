@@ -8,8 +8,40 @@ Navy Seals Copy Pasta Typing Test
   <div class="container row h-100 mx-auto">
     <div class="card col-12 my-auto mx-auto">
         <div class="card-body">
-            <h1 class="mb-2 py-2">Navy Seals Copy Pasta Typing Test</h1>
-            <span class="border px-4 py-1"><span id="id_speed">0.0000</span> NVCP/minute</span>
+            <div class="row">
+                <div class="col-12 col-md-8 position-relative">
+                    <h1 class="mb-2 py-2 text-white position-relative" style="z-index: 99;">
+                        Navy Seals Copy Pasta Typing Test
+                    </h1>
+                    <div class="w-75 long-thing text-left"></div>
+                </div>
+                
+                <div class="col-12 col-md-4">
+                    <div class="d-flex flex-md-row flex-column h-100 align-items-center justify-content-end py-2">
+                        <div class="column px-5">
+                            <h2 id="id_speed" class="text-white">0.0000</h2>
+                            <div class="position-relative">
+                                <h6 class="text-white mb-0 position-relative shadow" style="z-index: 99 !important;">
+                                    NVCP/minute
+                                </h6>
+                                <div class="w-100 short-thing"></div>
+                            </div>
+                            
+                        </div>
+                        <div class="column px-5">
+                            <h2 id="id_wpm" class="text-white">0</h2>
+                            <div class="position-relative">
+                                <h6 class="text-white mb-0 position-relative shadow" style="z-index: 99 !important;">
+                                    WPM
+                                </h6>
+                                <div class="w-100 short-thing"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
 
             <ul id="id_paragraph_list" class="list-inline mt-5">
 
@@ -17,10 +49,10 @@ Navy Seals Copy Pasta Typing Test
 
             <div class="row px-2 mb-2 mt-2">
                 <div class="col-9">
-                    <input type="text" class="w-100 h-100" id="id_input">
+                    <input type="text" class="w-100 h-100 main-input rounded" id="id_input">
                 </div>
-                <div class="col-1 border align-items-center d-flex justify-content-center">
-                    <p class="mb-0 text-muted" id="id_timer">1:00</p>
+                <div class="col-1 border align-items-center d-flex justify-content-center main-border">
+                    <p class="mb-0 text-white rounded" id="id_timer">1:00</p>
                 </div>
                 <div class="col-2">
                     <button id="id_restart" class="w-100 btn btn-primary">Restart</button>
@@ -40,6 +72,8 @@ Navy Seals Copy Pasta Typing Test
         var timer = $('#id_timer');
         var interval = null;
         var speed = $('#id_speed');
+        var wpm = $('#id_wpm');
+        var total_correct_chars = 0;
         paragraph_list = $('#id_paragraph_list');
 
         paragraph = "{{ paragraph }}".split(' ');
@@ -47,7 +81,7 @@ Navy Seals Copy Pasta Typing Test
 
         function populate_list() {
             for (var i=0; i < n; i++) {
-                paragraph_list.append('<li class="list-inline-item rounded px-2 py-1 m-0">'+ paragraph[i] +'</li>');
+                paragraph_list.append('<span class="list-inline-item rounded px-2 py-1 m-0">'+ paragraph[i] +'</span>');
             }
         }
 
@@ -71,7 +105,9 @@ Navy Seals Copy Pasta Typing Test
             time_left = 60;
             test_started = false;
             speed.html("0.0000");
+            wpm.html("0");
             input.prop("disabled", false);
+            total_correct_chars = 0;
         }
 
         function start_test() {
@@ -93,7 +129,10 @@ Navy Seals Copy Pasta Typing Test
 
         function set_speed() {
             current_speed = (correct_words/n).toFixed(4);
+            total_correct_chars = total_correct_chars + current_word.length;
+            current_wpm = ((total_correct_chars/3)).toFixed(0);
             speed.html(current_speed);
+            wpm.html(current_wpm);
         }
 
         populate_list();
@@ -122,19 +161,24 @@ Navy Seals Copy Pasta Typing Test
                 current_word_elem.removeClass('bg-secondary');
                 current_word_elem.addClass('bg-danger');
             } else {
-                current_word_elem.removeClass('bg-danger');
-                current_word_elem.addClass('bg-secondary');
+                if (word != current_word.slice(0, word.length)) {
+                current_word_elem.removeClass('bg-secondary');
+                current_word_elem.addClass('bg-danger');
+                } else {
+                    current_word_elem.removeClass('bg-danger');
+                    current_word_elem.addClass('bg-secondary');
+                }
             }
 
             if (word.slice(word.length - 1) == " ") {
                 word = word.slice(0, word.length - 1);
                 if (word == current_word) {
-                    console.log("correct word");
                     correct_words++;
-                    current_word_elem.removeClass('bg-secondary text-white');
+                    current_word_elem.removeClass('bg-secondary text-white bg-danger');
                     current_word_elem.addClass('bg-transparent text-success');
+                    set_speed();
+
                 } else {
-                    console.log("false");
                     current_word_elem.removeClass('bg-secondary bg-danger bg-success text-white');
                     current_word_elem.addClass('text-danger');
                 }
@@ -145,7 +189,6 @@ Navy Seals Copy Pasta Typing Test
                 current_word_elem = $(paragraph_list_children[current_ind]);
                 current_word_elem.addClass('bg-secondary text-white');
 
-                set_speed();
 
                 input.val("");
             }

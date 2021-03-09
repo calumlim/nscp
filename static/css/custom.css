@@ -1,0 +1,81 @@
+.bg-secondary {
+    background-color: #7f8fa6 !important;
+}
+
+.bg-danger {
+    background-color: #e84118 !important;
+}
+
+.main-background {
+    background-color: #2f3640;
+}
+
+.card {
+    background-color: #353b48;
+}
+
+span {
+    color: #bdc3c7;
+    font-family: 'Roboto Mono', sans-serif;
+}
+
+.text-success {
+    color: #f1c40f !important;
+}
+
+.text-danger {
+    color: #e84118 !important;
+}
+
+.main-color {
+    color: #f1c40f !important;
+}
+
+.main-border {
+    border: 1px solid #2f3640 !important;
+    background-color: #2f3640 ;
+}
+
+.main-input {
+    background-color: #2f3640 !important;
+    border: none;
+    color: #bdc3c7;
+    padding-left: 10px;
+}
+
+.main-input:focus {
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #f1c40f;
+    color: #2f3640;
+    border: none;
+}
+
+.btn-primary:focus {
+    outline: none;
+}
+
+.btn-primary:hover {
+    background-color: #ffe065;
+    color: #2f3640;
+}
+
+.short-thing {
+    background-color: #f39c12;
+    height: 7px;
+    position: absolute;
+    right: -2px;
+    bottom: 2px;
+    z-index: 0 !important;
+}
+
+.long-thing {
+    background-color: #f39c12;
+    height: 17px;
+    position: absolute;
+    left: 17px;
+    bottom: 30px;
+    z-index: 0 !important;
+}
