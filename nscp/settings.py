@@ -123,4 +123,4 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-STATIC_ROOT = '/public/static/'
+STATIC_ROOT = '/public/nscp/static/'
